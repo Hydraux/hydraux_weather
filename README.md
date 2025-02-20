@@ -1,3 +1,3 @@
-# hydraux_weather
+# Hydraux Weather
 
-A new Flutter project.
+A weather forecast application that pulls data from https://open-meteo.com
