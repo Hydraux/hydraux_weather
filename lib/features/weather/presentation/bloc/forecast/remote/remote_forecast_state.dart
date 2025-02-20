@@ -5,15 +5,16 @@ import 'package:hydraux_weather/features/weather/domain/value_objects/forecast_v
 abstract class RemoteForecastState extends Equatable{
   final ForecastValueObject? forecast;
   final DioException? exception;
+  final bool pending;
 
-  const RemoteForecastState({this.forecast, this.exception});
+  const RemoteForecastState({this.forecast, this.exception, this.pending = false});
 
   @override
-  List<Object> get props => [forecast!, exception!];
+  List<Object?> get props => [forecast, exception, pending];
 }
 
 class RemoteForecastsLoading extends RemoteForecastState{
-  const RemoteForecastsLoading();
+  const RemoteForecastsLoading(): super(pending: true);
 }
 
 class RemoteForecastsDone extends RemoteForecastState{
@@ -22,4 +23,8 @@ class RemoteForecastsDone extends RemoteForecastState{
 
 class RemoteForecastsError extends RemoteForecastState{
   const RemoteForecastsError(DioException exception) : super(exception: exception);
+}
+
+class PermissionsError extends RemoteForecastState{
+  const PermissionsError();
 }
