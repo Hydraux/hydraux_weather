@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydraux_weather/features/weather/domain/value_objects/current_forecast_value_object.dart';
 import 'package:hydraux_weather/features/weather/domain/value_objects/daily_forecast_value_object.dart';
 import 'package:hydraux_weather/features/weather/domain/value_objects/forecast_units_value_object.dart';
+import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_bloc.dart';
+import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_event.dart';
 import 'package:hydraux_weather/features/weather/presentation/utils/forecast_utils.dart';
 import 'package:hydraux_weather/features/weather/presentation/widgets/current_forecast_data_card.dart';
 
@@ -11,6 +14,7 @@ class CurrentForecastLayout extends StatelessWidget {
   final ForecastUnitsValueObject current_units;
   final DailyForecastValueObject daily;
   final bool isFahrenheit;
+  final DateTime lastUpdated;
 
   const CurrentForecastLayout({
     super.key,
@@ -19,6 +23,7 @@ class CurrentForecastLayout extends StatelessWidget {
     required this.current_units,
     required this.daily,
     required this.isFahrenheit,
+    required this.lastUpdated,
   });
 
   @override
@@ -43,6 +48,17 @@ class CurrentForecastLayout extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 10,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Tooltip(message: "Last Updated: ${lastUpdated.toLocal()}",child: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.secondary,),),
+                        Spacer(),
+                        IconButton(onPressed: (){BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts());}, icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.secondary,))
+                      ],
+                    ),
+                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +67,12 @@ class CurrentForecastLayout extends StatelessWidget {
                         Flexible(
                           flex: 1,
                           child: Icon(
-                            getWeatherIcon(precipitationSum: daily.precipitation_sum![0], minTemperature: daily.temperature_2m_min![0], isFahrenheit: isFahrenheit, cloudCover: 0),
+                            getWeatherIcon(
+                              precipitationSum: daily.precipitation_sum![0],
+                              minTemperature: daily.temperature_2m_min![0],
+                              isFahrenheit: isFahrenheit,
+                              cloudCover: 0,
+                            ),
                             size: 80,
                             color: Theme.of(context).colorScheme.primary,
                           ),

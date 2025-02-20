@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_bloc.dart';
@@ -12,6 +14,7 @@ class Forecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Timer.periodic(Duration(hours: 1), (Timer t) => BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts()));
     return Scaffold(
         body: Padding(padding: EdgeInsets.zero, child: _buildBody()),
       );
@@ -61,6 +64,7 @@ class Forecast extends StatelessWidget {
                         current_units: state.forecast!.current_units!,
                         daily: state.forecast!.daily!,
                         isFahrenheit: state.forecast!.daily_units!.temperature_2m_min == "°F",
+                        lastUpdated: state.forecast!.lastUpdated!,
                       ),
                       DailyForecastLayout(daily: state.forecast!.daily!, dailyUnits: state.forecast!.daily_units!)
                     ],

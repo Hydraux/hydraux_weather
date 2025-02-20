@@ -5,7 +5,7 @@ import 'package:hydraux_weather/features/weather/data/models/hourly_forecast_mod
 import 'package:hydraux_weather/features/weather/domain/value_objects/forecast_value_object.dart';
 
 class ForecastModel extends ForecastValueObject{
-  const ForecastModel({
+  ForecastModel({
     super.current_units,
     super.current,
     super.hourly_units,

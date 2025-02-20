@@ -11,15 +11,16 @@ class ForecastValueObject extends Equatable {
   final HourlyForecastValueObject? hourly;
   final ForecastUnitsValueObject? daily_units;
   final DailyForecastValueObject? daily;
+  final DateTime? lastUpdated;
 
-  const ForecastValueObject({
+  ForecastValueObject({
     this.current_units,
     this.current,
     this.hourly_units,
     this.hourly,
     this.daily_units,
     this.daily
-  });
+  }): lastUpdated = DateTime.now();
 
   @override
   List<Object?> get props {
@@ -29,7 +30,8 @@ class ForecastValueObject extends Equatable {
       hourly_units,
       hourly,
       daily_units,
-      daily
+      daily,
+      lastUpdated,
     ];
   }
 }
