@@ -15,6 +15,7 @@ abstract class ForecastApiService {
     @Query('longitude') double? longitude,
     @Query('timezone') String? timezone,
     @Query('forecast_days') int? forecast_days,
+    @Query('forecast_hours') int? forecast_hours,
     @Query('current') String? current,
     @Query('hourly') String? hourly,
     @Query('daily') String? daily,

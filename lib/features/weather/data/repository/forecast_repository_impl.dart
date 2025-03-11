@@ -25,6 +25,7 @@ class ForecastRepositoryImpl implements ForecastRepository {
         longitude: position.longitude,
         timezone: currentTimeZone,
         forecast_days: forecast_days,
+        forecast_hours: forecast_hours,
         current: current,
         hourly: hourly,
         daily: daily,

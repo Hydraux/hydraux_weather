@@ -9,7 +9,7 @@ import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remo
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_state.dart';
 import 'package:hydraux_weather/features/weather/presentation/widgets/current_forecast_layout.dart';
 import 'package:hydraux_weather/features/weather/presentation/widgets/daily_forecast_layout.dart';
-import 'package:hydraux_weather/injection_container.dart';
+import 'package:hydraux_weather/features/weather/presentation/widgets/hourly_forecast_layout.dart';
 
 class Forecast extends StatelessWidget {
   const Forecast({super.key});
@@ -22,14 +22,13 @@ class Forecast extends StatelessWidget {
           BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts()),
     );
     return Scaffold(
-        body: Padding(padding: EdgeInsets.zero, child: _buildBody()),
+        body: SafeArea(child: Padding(padding: EdgeInsets.zero, child: _buildBody())),
     );
   }
 
   _buildBody() {
     return BlocListener<RemoteForecastBloc, RemoteForecastState>(
       listener: (context, state) {
-        print("Listener called");
         if (state is RemoteForecastsError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -83,9 +82,10 @@ class Forecast extends StatelessWidget {
           if (state is RemoteForecastsDone) {
             return LayoutBuilder(
               builder: (context, constraints) {
-                return SizedBox(
-                  width: constraints.maxWidth,
-                  height: constraints.maxHeight,
+                return CustomScrollView(
+                  slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -103,6 +103,16 @@ class Forecast extends StatelessWidget {
                         create:
                             (context) =>
                                 ForecastLayoutBloc(NoForecastSelected()),
+                        child: HourlyForecastLayout(
+                          constraints: constraints,
+                          hourly: state.forecast!.hourly!,
+                          hourlyUnits: state.forecast!.hourly_units!,
+                        ),
+                      ),
+                      BlocProvider<ForecastLayoutBloc>(
+                        create:
+                            (context) =>
+                                ForecastLayoutBloc(NoForecastSelected()),
                         child: DailyForecastLayout(
                           constraints: constraints,
                           daily: state.forecast!.daily!,
@@ -111,7 +121,7 @@ class Forecast extends StatelessWidget {
                       ),
                     ],
                   ),
-                );
+            )]);
               },
             );
           }

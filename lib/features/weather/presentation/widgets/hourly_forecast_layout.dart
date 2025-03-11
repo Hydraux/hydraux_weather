@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hydraux_weather/features/weather/domain/value_objects/daily_forecast_value_object.dart';
 import 'package:hydraux_weather/features/weather/domain/value_objects/forecast_units_value_object.dart';
+import 'package:hydraux_weather/features/weather/domain/value_objects/hourly_forecast_value_object.dart';
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/layout/forecast_layout_bloc.dart';
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/layout/forecast_layout_state.dart';
-import 'package:hydraux_weather/features/weather/presentation/widgets/daily_forecast_card.dart';
+import 'package:hydraux_weather/features/weather/presentation/widgets/hourly_forecast_card.dart';
 
-class DailyForecastLayout extends StatelessWidget {
-  final DailyForecastValueObject _daily;
-  final ForecastUnitsValueObject _dailyUnits;
+class HourlyForecastLayout extends StatelessWidget {
+  final HourlyForecastValueObject _hourly;
+  final ForecastUnitsValueObject _hourlyUnits;
 
-  const DailyForecastLayout({
+  const HourlyForecastLayout({
     super.key,
     required BoxConstraints constraints,
-    required DailyForecastValueObject daily,
-    required ForecastUnitsValueObject dailyUnits,
-  }) : _dailyUnits = dailyUnits,
-       _daily = daily;
+    required HourlyForecastValueObject hourly,
+    required ForecastUnitsValueObject hourlyUnits,
+  }) : _hourlyUnits = hourlyUnits,
+       _hourly = hourly;
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +26,18 @@ class DailyForecastLayout extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("14 Day Forecast", style: TextStyle(fontSize: 16),),
+            Text("Hourly Forecast", style: TextStyle(fontSize: 16),),
             SingleChildScrollView(
               padding: EdgeInsets.zero,
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: List<Widget>.generate(_daily.time!.length, (index) {
-                  if (index == 0) return Container();
+                children: List<Widget>.generate(_hourly.time!.length, (index) {
+                  if (index == 0 || DateTime.parse(_hourly.time![index]).isBefore(DateTime.now())) return Container();
                   return BlocBuilder<ForecastLayoutBloc, ForecastLayoutState>(
                     builder: (context, state) {
-                      return DailyForecastCard(
-                        daily: _daily,
-                        dailyUnits: _dailyUnits,
+                      return HourlyForecastCard(
+                        hourly: _hourly,
+                        hourlyUnits: _hourlyUnits,
                         index: index,
                       );
                     },

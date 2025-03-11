@@ -28,100 +28,90 @@ class DailyForecastCard extends StatelessWidget {
     return BlocBuilder<ForecastLayoutBloc, ForecastLayoutState>(
       builder: (context, state) {
         final isSelected = state.selectedIndex == _index;
-        final noneSelected = state.selectedIndex == null;
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2),
-          child: GestureDetector(
-            onTap:
-                () => {
-                  if (isSelected)
-                    {
-                      BlocProvider.of<ForecastLayoutBloc>(
-                        context,
-                      ).add(DeselectForecast()),
-                    }
-                  else
-                    {
-                      BlocProvider.of<ForecastLayoutBloc>(
-                        context,
-                      ).add(SelectForecast(forecastIndex: _index)),
-                    },
-                },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.vertical(
-                  top: const Radius.circular(12),
-                  bottom: Radius.circular(12),
-                ),
+        return GestureDetector(
+          onTap:
+              () => {
+                if (isSelected)
+                  {
+                    BlocProvider.of<ForecastLayoutBloc>(
+                      context,
+                    ).add(DeselectForecast()),
+                  }
+                else
+                  {
+                    BlocProvider.of<ForecastLayoutBloc>(
+                      context,
+                    ).add(SelectForecast(forecastIndex: _index)),
+                  },
+              },
+          child: Card(
+            color: Theme.of(context).colorScheme.surfaceContainerHigh,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 12.0,
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 12.0,
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Column(
-                          spacing: 10,
-                          children: [
-                            Text(
-                              DateFormat(
-                                DateFormat.ABBR_MONTH_WEEKDAY_DAY,
-                              ).format(DateTime.parse(_daily.time![_index])),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Icon(
-                              getWeatherIcon(_daily.weather_code![_index]),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        spacing: 10,
+                        children: [
+                          Text(
+                            DateFormat(
+                              DateFormat.ABBR_MONTH_WEEKDAY_DAY,
+                            ).format(DateTime.parse(_daily.time![_index])),
+                            style: TextStyle(
                               color: Theme.of(context).colorScheme.primary,
-                              size: 50,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Row(
-                              spacing: isSelected ? 20 : 0,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      "${isSelected ? "High: " : ""}${_daily.temperature_2m_max![_index]}${_dailyUnits.temperature_2m_max}",
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
+                          ),
+                          Icon(
+                            getWeatherIcon(_daily.weather_code![_index]),
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 50,
+                          ),
+                          Row(
+                            spacing: isSelected ? 20 : 0,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    "${isSelected ? "High: " : ""}${_daily.temperature_2m_max![_index]}${_dailyUnits.temperature_2m_max}",
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                     ),
-                                    Text(
-                                      "${isSelected ? "Low: " : ""}${_daily.temperature_2m_min![_index]}${_dailyUnits.temperature_2m_max}",
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.secondary,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  ),
+                                  Text(
+                                    "${isSelected ? "Low: " : ""}${_daily.temperature_2m_min![_index]}${_dailyUnits.temperature_2m_max}",
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
-                                ),
-                                isSelected
-                                    ? _forecastDetails(context)
-                                    : SizedBox.shrink(),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                                  ),
+                                ],
+                              ),
+                              isSelected
+                                  ? _forecastDetails(context)
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

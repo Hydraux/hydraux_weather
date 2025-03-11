@@ -12,6 +12,7 @@ class ForecastUnitsValueObject extends Equatable{
   final String? precipitation_sum;
   final String? precipitation_hours;
   final String? precipitation_probability_max;
+  final String? precipitation_probability;
   final String? relative_humidity_2m;
   final String? uv_index;
   final String? weather_code;
@@ -29,6 +30,7 @@ class ForecastUnitsValueObject extends Equatable{
     this.precipitation_hours,
     this.precipitation_sum,
     this.precipitation_probability_max,
+    this.precipitation_probability,
     this.relative_humidity_2m,
     this.uv_index,
     this.weather_code,
@@ -48,6 +50,7 @@ class ForecastUnitsValueObject extends Equatable{
       precipitation,
       precipitation_hours,
       precipitation_probability_max,
+      precipitation_probability,
       precipitation_sum,
       weather_code,
       cloud_cover,
