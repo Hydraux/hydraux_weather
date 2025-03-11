@@ -68,10 +68,7 @@ class CurrentForecastLayout extends StatelessWidget {
                           flex: 1,
                           child: Icon(
                             getWeatherIcon(
-                              precipitationSum: daily.precipitation_sum![0],
-                              minTemperature: daily.temperature_2m_min![0],
-                              isFahrenheit: isFahrenheit,
-                              cloudCover: 0,
+                              current.weather_code!
                             ),
                             size: 80,
                             color: Theme.of(context).colorScheme.primary,

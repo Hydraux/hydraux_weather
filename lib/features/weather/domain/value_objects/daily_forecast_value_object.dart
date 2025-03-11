@@ -7,6 +7,7 @@ class DailyForecastValueObject extends Equatable {
   final List<dynamic>? time;
   final List<dynamic>? temperature_2m_max;
   final List<dynamic>? temperature_2m_min;
+  final List<dynamic>? weather_code;
 
 
   const DailyForecastValueObject({
@@ -16,6 +17,7 @@ class DailyForecastValueObject extends Equatable {
     this.time,
     this.temperature_2m_max,
     this.temperature_2m_min,
+    this.weather_code
   });
 
   @override

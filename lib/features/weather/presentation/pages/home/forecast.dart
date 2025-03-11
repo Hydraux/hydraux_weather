@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/layout/forecast_layout_bloc.dart';
+import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/layout/forecast_layout_state.dart';
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_bloc.dart';
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_event.dart';
 import 'package:hydraux_weather/features/weather/presentation/bloc/forecast/remote/remote_forecast_state.dart';
@@ -14,10 +16,14 @@ class Forecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(Duration(hours: 1), (Timer t) => BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts()));
+    Timer.periodic(
+      Duration(hours: 1),
+      (Timer t) =>
+          BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts()),
+    );
     return Scaffold(
         body: Padding(padding: EdgeInsets.zero, child: _buildBody()),
-      );
+    );
   }
 
   _buildBody() {
@@ -25,18 +31,43 @@ class Forecast extends StatelessWidget {
       listener: (context, state) {
         print("Listener called");
         if (state is RemoteForecastsError) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Unknown error occurred"), duration: Duration(days: 1), action: SnackBarAction(label: "Retry", onPressed: (){
-          ScaffoldMessenger.of(context).clearSnackBars();
-          BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts());
-          }),));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.exception?.message ?? "Unknown error occurred",
+              ),
+              duration: Duration(days: 1),
+              action: SnackBarAction(
+                label: "Retry",
+                onPressed: () {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  BlocProvider.of<RemoteForecastBloc>(
+                    context,
+                  ).add(GetForecasts());
+                },
+              ),
+            ),
+          );
         }
 
         if (state is PermissionsError) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to get location due to a permissions error"), duration: Duration(days: 1) , action: SnackBarAction(label: "Retry", onPressed: (){
-          ScaffoldMessenger.of(context).clearSnackBars();
-          BlocProvider.of<RemoteForecastBloc>(context).add(GetForecasts());
-          }),));
-
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Failed to get location due to a permissions error",
+              ),
+              duration: Duration(days: 1),
+              action: SnackBarAction(
+                label: "Retry",
+                onPressed: () {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  BlocProvider.of<RemoteForecastBloc>(
+                    context,
+                  ).add(GetForecasts());
+                },
+              ),
+            ),
+          );
         }
       },
       child: BlocBuilder<RemoteForecastBloc, RemoteForecastState>(
@@ -44,11 +75,11 @@ class Forecast extends StatelessWidget {
           if (state is RemoteForecastsLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-      
+
           if (state is RemoteForecastsError || state is PermissionsError) {
             return const Center(child: Icon(Icons.error_outline));
           }
-      
+
           if (state is RemoteForecastsDone) {
             return LayoutBuilder(
               builder: (context, constraints) {
@@ -63,10 +94,21 @@ class Forecast extends StatelessWidget {
                         current: state.forecast!.current!,
                         current_units: state.forecast!.current_units!,
                         daily: state.forecast!.daily!,
-                        isFahrenheit: state.forecast!.daily_units!.temperature_2m_min == "°F",
+                        isFahrenheit:
+                            state.forecast!.daily_units!.temperature_2m_min ==
+                            "°F",
                         lastUpdated: state.forecast!.lastUpdated!,
                       ),
-                      DailyForecastLayout(daily: state.forecast!.daily!, dailyUnits: state.forecast!.daily_units!)
+                      BlocProvider<ForecastLayoutBloc>(
+                        create:
+                            (context) =>
+                                ForecastLayoutBloc(NoForecastSelected()),
+                        child: DailyForecastLayout(
+                          constraints: constraints,
+                          daily: state.forecast!.daily!,
+                          dailyUnits: state.forecast!.daily_units!,
+                        ),
+                      ),
                     ],
                   ),
                 );

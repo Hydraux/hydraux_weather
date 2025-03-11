@@ -8,6 +8,7 @@ class DailyForecastModel extends DailyForecastValueObject{
     super.time,
     super.temperature_2m_max,
     super.temperature_2m_min,
+    super.weather_code,
   });
 
   factory DailyForecastModel.fromJson(Map<String, dynamic> map){
@@ -18,6 +19,7 @@ class DailyForecastModel extends DailyForecastValueObject{
       time: map['time'],
       temperature_2m_max: map['temperature_2m_max'],
       temperature_2m_min: map['temperature_2m_min'],
+      weather_code: map['weather_code'],
     );
   }
 }

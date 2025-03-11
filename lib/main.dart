@@ -6,6 +6,7 @@ import 'package:hydraux_weather/features/weather/presentation/pages/home/forecas
 import 'package:hydraux_weather/injection_container.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initializeDependencies();
   runApp(const MainApp());
 }
@@ -13,9 +14,9 @@ void main() async {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider<RemoteForecastBloc>(
       create: (context) => sl()..add(const GetForecasts()),
       child: MaterialApp(
